@@ -1,118 +1,188 @@
+import { DatabaseModel } from "./DatabaseModel";
+
+// Recupera o pool de conexões do banco de dados
+const database = new DatabaseModel().pool;
+
 /**
- * Classe que representa um Pedido de Venda.
+ * Classe que representa um pedido de venda.
  */
 export class PedidoVenda {
 
     /* Atributos */
-    /* Identificador do pedido de venda */
+    /**
+     * Identificador do pedido de venda.
+     * Inicializado com o valor padrão de 0.
+     */
     private idPedido: number = 0;
-    /* Identificador do cliente que fez o pedido */
-    private idCliente: number;
-    /* Data do pedido */
-    private dataPedido: Date;
-    /* Lista de produtos do pedido */
-    private produtos: string[];
-    /* Valor total do pedido */
-    private valorTotal: number;
 
     /**
-     * Construtor da classe PedidoVenda
+     * Identificador do carro relacionado ao pedido.
+     */
+    private idCarro: number;
+
+    /**
+     * Identificador do cliente relacionado ao pedido.
+     */
+    private idCliente: number;
+
+    /**
+     * Data do pedido de venda.
+     */
+    private dataPedido: Date;
+
+    /**
+     * Valor total do pedido de venda.
+     */
+    private valorPedido: number;
+
+    /**
+     * Construtor da classe PedidoVenda.
+     * Inicializa os atributos com os valores fornecidos.
      * 
-     * @param idCliente Identificador do cliente que fez o pedido
-     * @param dataPedido Data do pedido
-     * @param produtos Lista de produtos do pedido
-     * @param valorTotal Valor total do pedido
+     * @param idCarro Identificador do carro relacionado ao pedido.
+     * @param idCliente Identificador do cliente relacionado ao pedido.
+     * @param dataPedido Data em que o pedido foi realizado.
+     * @param valorPedido Valor total do pedido.
      */
     constructor(
+        idCarro: number, 
         idCliente: number,
         dataPedido: Date,
-        produtos: string[],
-        valorTotal: number
+        valorPedido: number
     ) {
-        this.idCliente = idCliente;
-        this.dataPedido = dataPedido;
-        this.produtos = produtos;
-        this.valorTotal = valorTotal;
+        this.idCarro = idCarro;           // Atribui o ID do carro ao atributo idCarro.
+        this.idCliente = idCliente;       // Atribui o ID do cliente ao atributo idCliente.
+        this.dataPedido = dataPedido;     // Atribui a data do pedido ao atributo dataPedido.
+        this.valorPedido = valorPedido;   // Atribui o valor do pedido ao atributo valorPedido.
     }
 
     /* Métodos get e set */
+
     /**
-     * Recupera o identificador do pedido.
-     * @returns {number} o identificador do pedido.
+     * Retorna o identificador do pedido de venda.
+     * 
+     * @returns {number} O identificador do pedido de venda.
      */
     public getIdPedido(): number {
         return this.idPedido;
     }
 
     /**
-     * Atribui um valor ao identificador do pedido.
-     * @param idPedido novo identificador do pedido.
+     * Define o identificador do pedido de venda.
+     * 
+     * @param idPedidoVenda O novo identificador do pedido de venda.
      */
     public setIdPedido(idPedido: number): void {
         this.idPedido = idPedido;
     }
 
     /**
-     * Recupera o identificador do cliente.
-     * @returns {number} o identificador do cliente.
+     * Retorna o identificador do carro relacionado ao pedido.
+     * 
+     * @returns {number} O identificador do carro.
+     */
+    public getIdCarro(): number {
+        return this.idCarro;
+    }
+
+    /**
+     * Define o identificador do carro relacionado ao pedido.
+     * 
+     * @param idCarro O novo identificador do carro.
+     */
+    public setIdCarro(idCarro: number): void {
+        this.idCarro = idCarro;
+    }
+
+    /**
+     * Retorna o identificador do cliente relacionado ao pedido.
+     * 
+     * @returns {number} O identificador do cliente.
      */
     public getIdCliente(): number {
         return this.idCliente;
     }
 
     /**
-     * Atribui um novo valor ao identificador do cliente.
-     * @param idCliente novo identificador do cliente.
+     * Define o identificador do cliente relacionado ao pedido.
+     * 
+     * @param idCliente O novo identificador do cliente.
      */
     public setIdCliente(idCliente: number): void {
         this.idCliente = idCliente;
     }
 
     /**
-     * Recupera a data do pedido.
-     * @returns {Date} a data do pedido.
+     * Retorna a data do pedido de venda.
+     * 
+     * @returns {Date} A data do pedido de venda.
      */
     public getDataPedido(): Date {
         return this.dataPedido;
     }
 
     /**
-     * Define uma nova data para o pedido.
-     * @param dataPedido nova data do pedido.
+     * Define a data do pedido de venda.
+     * 
+     * @param dataPedido A nova data do pedido de venda.
      */
     public setDataPedido(dataPedido: Date): void {
         this.dataPedido = dataPedido;
     }
 
     /**
-     * Recupera a lista de produtos do pedido.
-     * @returns {string[]} A lista de produtos do pedido.
+     * Retorna o valor total do pedido de venda.
+     * 
+     * @returns {number} O valor do pedido de venda.
      */
-    public getProdutos(): string[] {
-        return this.produtos;
+    public getValorPedido(): number {
+        return this.valorPedido;
     }
 
     /**
-     * Define uma nova lista de produtos para o pedido.
-     * @param produtos A nova lista de produtos.
+     * Define o valor total do pedido de venda.
+     * 
+     * @param valorPedido O novo valor do pedido de venda.
      */
-    public setProdutos(produtos: string[]): void {
-        this.produtos = produtos;
+    public setValorPedido(valorPedido: number): void {
+        this.valorPedido = valorPedido;
     }
 
-    /**
-     * Recupera o valor total do pedido.
-     * @returns {number} O valor total do pedido.
-     */
-    public getValorTotal(): number {
-        return this.valorTotal;
+    // MÉTODO PARA ACESSAR O BANCO DE DADOS
+    // CRUD Create - Reat - Update - Delete
+    static async listarPedidosVendas(): Promise<Array<PedidoVenda> | null> {
+        //CRIANDO LISTA VAZIA PARA ARMAZENAR OS CLIENTES
+        let listaDePedidoVenda: Array<PedidoVenda> = [];
+
+        try {
+            //Query para consulta no banco de dados
+            const querySelectPedidoVenda = `SELECT * FROM pedido_venda`;
+
+            //executa a query no banco de dados
+            const respostaBD = await database.query(querySelectPedidoVenda);
+
+            respostaBD.rows.forEach((pedidoVenda) => {
+                let novaPedidoVenda = new PedidoVenda(
+                    pedidoVenda.id_carro,
+                    pedidoVenda.id_cliente,
+                    pedidoVenda.data_pedido,
+                    pedidoVenda.valor_pedido
+                )
+
+                // adicionando o ID ao objeto
+                novaPedidoVenda.setIdPedido(pedidoVenda.id_pedido);
+                console.log(novaPedidoVenda);
+                // adiconando o cliente a lista
+                listaDePedidoVenda.push(novaPedidoVenda);
+            });
+
+            // retornando a lista de clientes para quem chamou a função
+            return listaDePedidoVenda
+        } catch (error) {
+            console.log(`Erro ao acessar o modelo: ${error}`);
+            return null;
+            
+        } 
     }
 
-    /**
-     * Define o valor total do pedido.
-     * @param valorTotal Novo valor total do pedido.
-     */
-    public setValorTotal(valorTotal: number): void {
-        this.valorTotal = valorTotal;
-    }
 }
